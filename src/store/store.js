@@ -25,13 +25,13 @@ const composedEnhancer =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose;
 
-const composedEnhancers = composedEnhancer(applyMiddleware(...middleWares));
-
 // Now using the built-in logger but refer to logger.js to see how it works :)
 const middleWares = [
   process.env.NODE_ENV === "development" && logger,
   sagaMiddleware,
 ].filter(Boolean);
+
+const composedEnhancers = composedEnhancer(applyMiddleware(...middleWares));
 
 export const store = createStore(
   persistedReducer,
