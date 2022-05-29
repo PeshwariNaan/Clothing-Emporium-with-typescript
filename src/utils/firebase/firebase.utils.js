@@ -78,6 +78,7 @@ export const getCategoriesAndDocuments = async () => {
   const collectionRef = collection(db, "categories");
   const q = query(collectionRef);
 
+
   const querySnapShot = await getDocs(q); //Changing the way we get the categories - this gives us back the categories as an array
   return querySnapShot.docs.map(docSnapshot => docSnapshot.data())
 

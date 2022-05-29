@@ -22,6 +22,13 @@ export const selectCategoriesMap = createSelector(
     }, {})
   }
 );
+
+
+// Creating a new selector to use to check the isLoading state and display the spinner
+export const selectCategoriesisLoading = createSelector(
+  [selectCategoryReducer],
+  (categoriesSlice) => categoriesSlice.isLoading
+)
   
   
 
