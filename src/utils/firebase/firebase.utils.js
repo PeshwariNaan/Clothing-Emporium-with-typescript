@@ -120,7 +120,7 @@ export const createUserDocumentFromAuth = async (
   }
 
   //if user data exists
-  return userDocRef;
+  return userSnapshot; //Changed from returning userDocRef to userSnapshot when changing to saga
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -141,3 +141,18 @@ export const signOutUser = async () => signOut(auth);
 //This will call the callback when the state of the auth changes (on sign-in and sign-out for example) - this is always listening for changes.
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+
+  // Redux-saga way of using the listener - async
+  export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = onAuthStateChanged(
+        auth,
+        (userAuth) => {
+          unsubscribe() //This is again a clean-up so we don't get a memory leak
+          resolve(userAuth)
+        },
+        reject
+      )
+    })
+  }
