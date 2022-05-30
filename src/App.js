@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { getCurrentUser } from "./utils/firebase/firebase.utils";
 import { useDispatch } from "react-redux";
 
 import { Routes, Route } from "react-router-dom";
