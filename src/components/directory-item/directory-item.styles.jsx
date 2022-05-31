@@ -28,7 +28,7 @@ export const Body = styled.div`
   }
   p {
     font-weight: lighter;
-    font-size: 16px;
+    font-size: 16px;    
   }
 `;
 
