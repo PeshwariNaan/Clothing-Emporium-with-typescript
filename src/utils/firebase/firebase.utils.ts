@@ -106,7 +106,7 @@ export const getCategoriesAndDocuments = async (): Promise<Category[]> => {
 
 //Typing userAuth and additional information
 export type AdditionalInformation = {
-  dispayName?: string;
+  displayName?: string;
 }
 
 export type UserData = {
