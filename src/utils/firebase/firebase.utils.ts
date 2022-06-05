@@ -8,6 +8,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  User,
+  NextOrObserver,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -18,7 +20,10 @@ import {
   writeBatch,
   query,
   getDocs,
+  QueryDocumentSnapshot
 } from "firebase/firestore";
+
+import { Category } from "../../store/categories/category.types";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBlxWdN73k8vodA6MevRXiSJkEOUTMw2ME",
@@ -53,11 +58,15 @@ export const signInWithGoogleRedirect = () =>
 
 export const db = getFirestore();
 
+export type ObjectToAdd = {
+  title: string;
+}
+
 //Function to add collections and documents to firestore - need to import collection and writeBatch
-export const addCollectionAndDocuments = async (
-  collectionKey,
-  objectsToAdd
-) => {
+export const addCollectionAndDocuments = async <T extends ObjectToAdd>(
+  collectionKey: string,
+  objectsToAdd: T[]
+): Promise<void> =>{
   const batch = writeBatch(db);
   const collectionRef = collection(db, collectionKey);
 
@@ -70,17 +79,19 @@ export const addCollectionAndDocuments = async (
   console.log("done");
 };
 
+
+
 //Function to retrieve from firestore - need to import query and getDocs
 //This type of helper function isolates the areas that our application interfaces with things that change
 // i.e. third party libraries - bad thing about google and firebase.
 // This way we only have to change this one function rather than chase problems through the app if something changes
-export const getCategoriesAndDocuments = async () => {
+export const getCategoriesAndDocuments = async (): Promise<Category[]> => {
   const collectionRef = collection(db, "categories");
   const q = query(collectionRef);
 
 
   const querySnapShot = await getDocs(q); //Changing the way we get the categories - this gives us back the categories as an array
-  return querySnapShot.docs.map(docSnapshot => docSnapshot.data())
+  return querySnapShot.docs.map(docSnapshot => docSnapshot.data() as Category)
 
 
  //Moved to categories selector - changed to return categoriesArray 
@@ -92,11 +103,22 @@ export const getCategoriesAndDocuments = async () => {
 
 //   return categoryMap
 };
+
+//Typing userAuth and additional information
+export type AdditionalInformation = {
+  dispayName?: string;
+}
+
+export type UserData = {
+  createdAt: string;
+  dispalyName: string;
+  email: string;
+}
   
 export const createUserDocumentFromAuth = async (
-  userAuth,
+  userAuth: User,
   additionalInfo = {}
-) => {
+): Promise<void | QueryDocumentSnapshot <UserData> > => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, "users", userAuth.uid);
@@ -115,21 +137,21 @@ export const createUserDocumentFromAuth = async (
         ...additionalInfo,
       });
     } catch (error) {
-      console.log("Error creating user", error.message);
+      console.log("Error creating user", error);
     }
   }
 
   //if user data exists
-  return userSnapshot; //Changed from returning userDocRef to userSnapshot when changing to saga
+  return userSnapshot as QueryDocumentSnapshot<UserData>  ; //Changed from returning userDocRef to userSnapshot when changing to saga
 };
 
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
+export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
-export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+export const signInAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
   return await signInWithEmailAndPassword(auth, email, password);
@@ -139,12 +161,12 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 export const signOutUser = async () => signOut(auth);
 
 //This will call the callback when the state of the auth changes (on sign-in and sign-out for example) - this is always listening for changes.
-export const onAuthStateChangedListener = (callback) =>
+export const onAuthStateChangedListener = (callback: NextOrObserver<User> ) =>
   onAuthStateChanged(auth, callback);
 
 
   // Redux-saga way of using the listener - async
-  export const getCurrentUser = () => {
+  export const getCurrentUser = (): Promise<User | null > => {
     return new Promise((resolve, reject) => {
       const unsubscribe = onAuthStateChanged(
         auth,
