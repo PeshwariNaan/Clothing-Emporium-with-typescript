@@ -1,4 +1,4 @@
-import { all, call } from "redux-saga/effects";
+import { all, call } from "typed-redux-saga/macro";
 
 import { categoriesSaga } from "./categories/category.saga";
 import { userSaga } from './user/user.saga'
@@ -12,5 +12,5 @@ import { userSaga } from './user/user.saga'
 //yield i + 10;
 //} this will pause at each line and out put the execution of this line of code in the object from above
 export function* rootSaga() {
-    yield all([call(categoriesSaga), call(userSaga)])
+    yield* all([call(categoriesSaga), call(userSaga)])
 }
