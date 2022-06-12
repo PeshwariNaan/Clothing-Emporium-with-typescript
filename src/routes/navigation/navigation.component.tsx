@@ -12,9 +12,9 @@ import {
   NavLinks,
   NavLink,
   LogoContainer,
-} from "./navigation.styles.jsx";
+} from "./navigation.styles";
 
-import "./navigation.styles.jsx";
+
 
 const Navigation = () => {
   const dispatch = useDispatch()

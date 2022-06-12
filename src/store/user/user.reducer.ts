@@ -1,7 +1,5 @@
 import { AnyAction } from 'redux';
 
-import { USER_ACTION_TYPES } from './user.types';
-
 import {
   signOutFailed,
   signInSuccess,
@@ -42,5 +40,5 @@ export const userReducer = (state = INITIAL_STATE, action: AnyAction) => {
   }
 
   return state; //must return state when using reducers/redux. A reducer can take any action so if it is not in the cases, we must return state.
-  // Note: DONT PUT BRACKETS AROUND THIS - makes for some really weird behavior
+  // Note: DONT PUT BRACKETS AROUND THIS - makes for some really weird behavior - This whole this changes when adapting to RTK(redux-toolkit)
 };

@@ -5,7 +5,7 @@ import {
   CartIconContainer,
   ItemCount,
   ShoppingIcon,
-} from "./cart-icon.styles.jsx";
+} from "./cart-icon.styles";
 
 const CartIcon = () => {
   const dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import { CategoryItem } from '../categories/category.types';
-import { createAction, withMatcher, Action, ActionWithPayload } from '../../utils/reducer.utils'
+import { createAction, withMatcher, ActionWithPayload } from '../../utils/reducer.utils'
 import { CART_ACTION_TYPES, CartItem } from './cart.types';
 
 
